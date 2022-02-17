@@ -1,9 +1,12 @@
 package com.nbufe.community;
 
 import com.nbufe.community.dao.DiscussPostMapper;
+import com.nbufe.community.dao.LoginTicketMapper;
 import com.nbufe.community.dao.UserMapper;
 import com.nbufe.community.entity.DiscussPost;
+import com.nbufe.community.entity.LoginTicket;
 import com.nbufe.community.entity.User;
+import com.nbufe.community.util.CommunityUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +28,9 @@ public class MapperTests {
 
     @Resource
     private DiscussPostMapper discussPostMapper;
+
+    @Resource
+    private LoginTicketMapper loginTicketMapper;
 
     @Test
     public void testSelectUser(){
@@ -68,13 +74,40 @@ public class MapperTests {
 
     @Test
     public void selectDiscussPosts(){
-        List<DiscussPost> list=discussPostMapper.selectDiscussPosts(149,0,10);
+        List<DiscussPost> list=discussPostMapper.selectDiscussPosts(149,0,10,0);
         for(DiscussPost post:list){
             System.out.println(post);
         }
 
         int rows=discussPostMapper.selectDiscussPostRows(149);
         System.out.println(rows);
+    }
+
+    @Test
+    public void testInsertLoginTicket() {
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setUserId(101);
+        loginTicket.setTicket("abc");
+        loginTicket.setStatus(0);
+        loginTicket.setExpired(new Date(System.currentTimeMillis() + 1000 * 60 * 10));
+
+        loginTicketMapper.insertLoginTicket(loginTicket);
+    }
+
+    @Test
+    public void testSelectLoginTicket() {
+        LoginTicket loginTicket = loginTicketMapper.selectByTicket("abc");
+        System.out.println(loginTicket);
+
+        loginTicketMapper.updateStatus("abc", 1);
+        loginTicket = loginTicketMapper.selectByTicket("abc");
+        System.out.println(loginTicket);
+    }
+
+    @Test
+    public void testPassword(){
+        String password= CommunityUtil.md5("564200c2605");
+        System.out.println(password);
     }
 
 }

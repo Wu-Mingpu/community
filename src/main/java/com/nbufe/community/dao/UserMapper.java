@@ -20,6 +20,8 @@ public interface UserMapper {
 
     int updatePassword(int id,String password);
 
+    int updateSalt(int id,String salt);
+
 
 
 }
